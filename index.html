@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Portfolio de Sergio Pérez Pérez, desarrollador Full-Stack Junior en Madrid: React, Node.js y MongoDB. Apps en producción con demo en vivo.">
+<meta name="theme-color" content="#090b0f">
+<meta property="og:title" content="Sergio Pérez · Desarrollador Full-Stack Junior">
+<meta property="og:description" content="Apps completas con React, Node.js y MongoDB, desplegadas y listas para probar.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/favicon.png">
+<title>Sergio Pérez Portfolio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* Concepto: escaparate de producto. Base limpia, cuatro colores primarios vivos como única paleta
+   (rojo, amarillo, azul, verde), dispositivos reales con las capturas y movimiento con intención. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --ink: #0d1117;
+  --muted: #5a6572;
+  --line: rgba(13, 17, 23, .13);
+  --chip: rgba(13, 17, 23, .06);
+  --glass: rgba(255, 255, 255, .72);
+  --red: #f0432f;
+  --yellow: #ffc20e;
+  --blue: #2f6bff;
+  --green: #17b26a;
+  --purple: #7c3aed;
+  --gold: #c98f00;
+  --on-gold: #0d1117;
+  --link: #1f55d6;
+  --on-yellow: #0d1117;
+  --card: rgba(255, 255, 255, .5);
+  --shadow: 0 18px 50px -20px rgba(13, 17, 23, .35);
+  --f-display: "Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
+  --f-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #090b0f; --surface: #12161c; --ink: #eef1f5; --muted: #98a3b0; --line: rgba(238, 241, 245, .15);
+    --chip: rgba(238, 241, 245, .08); --glass: rgba(18, 22, 28, .72); --link: #8aa9ff; --purple: #a78bfa; --gold: #f2b705; --card: rgba(18, 22, 28, .45);
+    --shadow: 0 18px 50px -20px rgba(0, 0, 0, .8); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #090b0f; --surface: #12161c; --ink: #eef1f5; --muted: #98a3b0; --line: rgba(238, 241, 245, .15);
+  --chip: rgba(238, 241, 245, .08); --glass: rgba(18, 22, 28, .72); --link: #8aa9ff; --purple: #a78bfa; --gold: #f2b705; --card: rgba(18, 22, 28, .45);
+  --shadow: 0 18px 50px -20px rgba(0, 0, 0, .8); color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--ink); font: 400 1.02rem/1.65 var(--f-body);
+  -webkit-font-smoothing: antialiased; overflow-x: clip;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 80; background: var(--bg);
+}
+h1, h2, h3, h4, p, ul, figure { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: var(--link); }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 6px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+.inner {
+  max-width: 1160px; margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+section[id] { scroll-margin-top: 90px; }
+
+/* Fondo vivo: cuatro manchas de color y un foco que sigue al ratón */
+.aura { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.aura i { position: absolute; width: 46vmax; height: 46vmax; border-radius: 50%; filter: blur(90px); opacity: .22; animation: drift 24s ease-in-out infinite alternate; }
+.aura i:nth-child(1) { background: var(--purple); top: -18vmax; left: -12vmax; }
+.aura i:nth-child(2) { background: var(--gold); top: 8vmax; right: -16vmax; animation-delay: -6s; }
+.aura i:nth-child(3) { background: var(--blue); bottom: -20vmax; left: 12vmax; animation-delay: -12s; }
+.aura i:nth-child(4) { background: var(--green); bottom: -14vmax; right: -8vmax; animation-delay: -18s; opacity: .18; }
+:root[data-theme="dark"] .aura i { opacity: .16; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .aura i { opacity: .16; } }
+@keyframes drift { to { transform: translate(8vmax, 6vmax) scale(1.15); } }
+.spot { position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(520px circle at var(--mx, 70%) var(--my, 20%), rgba(255, 194, 14, .10), transparent 60%); }
+
+
+/* Telarañas difuminadas, araña y motas doradas (sutil) */
+.webs { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.web { position: absolute; width: min(48vmax, 560px); aspect-ratio: 1; color: var(--gold); opacity: .2;
+  -webkit-mask-image: radial-gradient(circle at 0 0, #000 18%, transparent 68%); mask-image: radial-gradient(circle at 0 0, #000 18%, transparent 68%); }
+:root[data-theme="dark"] .web { opacity: .3; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .web { opacity: .3; } }
+.web svg { width: 100%; height: 100%; display: block; transform-origin: 0 0; animation: sway 11s ease-in-out infinite alternate; filter: blur(.35px); }
+.web.w1 { top: 0; right: 0; transform: scaleX(-1); }
+.web.w2 { bottom: 0; left: 0; transform: scaleY(-1); width: min(40vmax, 460px); opacity: .14; }
+.web.w2 svg { animation-delay: -5s; }
+:root[data-theme="dark"] .web.w2 { opacity: .22; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .web.w2 { opacity: .22; } }
+@keyframes sway { from { transform: rotate(-1.4deg) scale(1); } to { transform: rotate(1.6deg) scale(1.025); } }
+.dew { animation: dew 5s ease-in-out infinite; }
+@keyframes dew { 0%, 100% { opacity: .15; } 50% { opacity: 1; } }
+.motes i { position: absolute; bottom: -12px; width: 4px; height: 4px; border-radius: 50%; background: var(--gold); opacity: 0; animation: mote linear infinite; box-shadow: 0 0 8px 1px var(--gold); }
+@keyframes mote { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: .7; } 85% { opacity: .5; } 100% { transform: translate(var(--dx, 20px), -105vh); opacity: 0; } }
+.hero { position: relative; }
+.dangle { position: absolute; top: -10px; right: clamp(8px, 6%, 90px); width: 34px; z-index: 0; pointer-events: none; color: var(--ink); opacity: .75; transform-origin: 50% 0; animation: swing 5s ease-in-out infinite alternate; }
+.dangle .thread { display: block; width: 1px; margin: 0 auto; height: 70px; background: linear-gradient(var(--line), currentColor); animation: drop 7s ease-in-out infinite; transform-origin: top; }
+.dangle svg { display: block; width: 34px; height: 34px; margin-top: -2px; }
+@keyframes swing { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+@keyframes drop { 0%, 100% { transform: scaleY(.55); } 50% { transform: scaleY(1.5); } }
+@media (max-width: 860px) { .dangle { display: none; } }
+.proof { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.3rem; list-style: none; padding: 0; }
+.proof li { display: inline-flex; align-items: center; gap: .45rem; padding: .35rem .75rem; border-radius: 999px; background: var(--card); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid var(--line); font: 600 .78rem var(--f-mono); }
+.proof li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c, var(--gold)); }
+.lead b { background: linear-gradient(transparent 62%, rgba(242, 183, 5, .35) 62%); }
+.btn-gold { background: var(--gold); color: var(--on-gold); border-color: transparent; }
+.btn-gold:hover { box-shadow: 0 10px 28px -8px var(--gold); }
+:root[data-theme="dark"] .btn-gold { color: #0d1117; }
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .55rem; padding: .78rem 1.25rem; border-radius: 999px;
+  font: 700 .95rem var(--f-body); text-decoration: none; cursor: pointer; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); transition: transform .2s, box-shadow .2s, background .2s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.btn-main { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn-yellow { background: var(--yellow); color: var(--on-yellow); border-color: transparent; }
+.btn-sm { padding: .5rem .95rem; font-size: .86rem; }
+.btn svg { width: 1em; height: 1em; }
+
+/* ---------- Cabecera flotante ---------- */
+.top { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 10px); z-index: 70; padding-block: 10px 0; }
+.top .bar {
+  display: flex; align-items: center; gap: .8rem; padding: .5rem .6rem .5rem 1rem; border-radius: 999px;
+  background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+}
+.mark { display: inline-flex; align-items: center; gap: .55rem; text-decoration: none; color: var(--ink); font: 800 1rem var(--f-display); }
+.mark img { width: 40px; height: 40px; border-radius: 50%; display: block; box-shadow: 0 0 0 1.5px rgba(242, 183, 5, .65), 0 0 18px -2px rgba(242, 183, 5, .55); transition: transform .5s cubic-bezier(.2, .8, .2, 1), box-shadow .3s; }
+.mark:hover img { transform: rotate(-14deg) scale(1.1); box-shadow: 0 0 0 2px var(--gold), 0 0 26px 0 rgba(242, 183, 5, .8); }
+.nav { display: flex; gap: .2rem; margin-left: auto; }
+.nav a { white-space: nowrap; padding: .45rem .8rem; border-radius: 999px; color: var(--ink); text-decoration: none; font: 500 .9rem var(--f-body); }
+.nav a:hover { background: var(--chip); }
+.tools { display: flex; gap: .4rem; }
+.nav + .tools { margin-left: 0; }
+.tool { text-decoration: none; display: inline-flex; align-items: center; font: 700 .8rem var(--f-mono); color: var(--ink); background: var(--chip); border: 0; border-radius: 999px; padding: .5rem .8rem; cursor: pointer; min-height: 36px; transition: background .2s; }
+.tool:hover { background: var(--yellow); color: var(--on-yellow); }
+@media (max-width: 860px) { .nav { display: none; } .tools { margin-left: auto; } .tool kbd { display: none; } }
+
+/* ---------- Hero ---------- */
+.hero { padding-block: clamp(2.4rem, 7vw, 5rem) clamp(3rem, 7vw, 5rem); }
+.hero .inner { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.5rem; align-items: center; }
+.pill { display: inline-flex; align-items: center; gap: .55rem; padding: .4rem .85rem; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font: 500 .8rem var(--f-mono); }
+.pill i { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgba(23, 178, 106, .6); animation: ping 2s infinite; }
+@keyframes ping { 70% { box-shadow: 0 0 0 10px rgba(23, 178, 106, 0); } 100% { box-shadow: 0 0 0 0 rgba(23, 178, 106, 0); } }
+.hero h1 { margin-top: 1.2rem; font: 800 clamp(2.3rem, 6vw, 4.3rem)/1 var(--f-display); letter-spacing: -.035em; text-wrap: balance; }
+.rot { display: block; height: 1.12em; overflow: hidden; }
+.rot > span { display: block; animation: rot 10s cubic-bezier(.7, 0, .2, 1) infinite; }
+.rot b {
+  display: block; white-space: nowrap; height: 1.12em; font-weight: 800; padding-right: .1em;
+  background: linear-gradient(90deg, var(--gold), var(--purple), var(--green), var(--gold)); background-size: 300% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent; animation: flow 8s linear infinite;
+}
+@keyframes flow { to { background-position: -300% 0; } }
+@keyframes rot { 0%, 20% { transform: translateY(0); } 25%, 45% { transform: translateY(-1.12em); } 50%, 70% { transform: translateY(-2.24em); } 75%, 95% { transform: translateY(-3.36em); } 100% { transform: translateY(-4.48em); } }
+.role { margin-top: 1.1rem; font: 500 1.05rem var(--f-mono); color: var(--muted); }
+.lead { margin-top: .8rem; max-width: 52ch; font-size: 1.12rem; color: var(--muted); }
+.lead b { color: var(--ink); font-weight: 700; }
+.cta { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.7rem; }
+
+.fan { position: relative; height: clamp(340px, 44vw, 480px); perspective: 1200px; margin-bottom: 1.5rem; }
+.fan .card {
+  position: absolute; width: 62%; border-radius: 14px; overflow: hidden; background: var(--surface); border: 1px solid var(--line);
+  box-shadow: var(--shadow); transition: transform .25s ease-out; animation: bob 7s ease-in-out infinite alternate;
+}
+.fan a.card { display: block; text-decoration: none; color: inherit; cursor: pointer; }
+.fan .card img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+.fan .card span { position: absolute; left: 10px; bottom: 10px; font: 700 .75rem var(--f-mono); padding: .3rem .6rem; border-radius: 999px; background: var(--ink); color: var(--bg); }
+.fan .c1 { top: 0; left: 0; z-index: 1; transform: translate(calc(var(--px, 0) * 8px), calc(var(--py, 0) * 6px)) rotate(-3deg); }
+.fan .c2 { top: 33%; right: 0; z-index: 2; transform: translate(calc(var(--px, 0) * -12px), calc(var(--py, 0) * 8px)) rotate(2.5deg); animation-delay: -2.5s; }
+.fan .c3 { bottom: 0; left: 6%; z-index: 3; transform: translate(calc(var(--px, 0) * 14px), calc(var(--py, 0) * -8px)) rotate(-1.5deg); animation-delay: -5s; }
+@keyframes bob { to { margin-top: -8px; } }
+@media (max-width: 860px) { .hero .inner { grid-template-columns: minmax(0, 1fr); } .fan { height: 360px; } .fan .card { width: 68%; } }
+
+/* ---------- Marquee ---------- */
+.marq { border-block: 1px solid var(--line); background: var(--card); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); overflow: hidden; }
+.marq div { display: flex; width: max-content; animation: marq 38s linear infinite; }
+.marq:hover div { animation-play-state: paused; }
+.marq span { display: inline-flex; align-items: center; gap: .8rem; padding: 1rem 1.4rem; font: 700 .9rem var(--f-mono); white-space: nowrap; }
+.marq span::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--red)); }
+@keyframes marq { to { transform: translateX(-50%); } }
+
+/* ---------- Secciones ---------- */
+.block { padding-block: clamp(3rem, 8vw, 5.5rem); }
+.eyebrow { font: 700 .78rem var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: .6rem; }
+.eyebrow::before { content: ""; width: 26px; height: 4px; border-radius: 2px; background: var(--c, var(--red)); }
+.h2 { margin-top: .8rem; font: 800 clamp(1.9rem, 5vw, 3.2rem)/1.05 var(--f-display); letter-spacing: -.03em; text-wrap: balance; max-width: 22ch; }
+.sub { margin-top: .8rem; max-width: 60ch; color: var(--muted); font-size: 1.06rem; }
+
+/* ---------- Proyectos ---------- */
+.proj { margin-top: clamp(2.4rem, 6vw, 4rem); padding: clamp(1.2rem, 3vw, 2.2rem); border-radius: 28px; background: var(--card); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.proj-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1.2rem; }
+.proj-head h3 { font: 800 clamp(2.4rem, 6vw, 4rem)/1 var(--f-display); letter-spacing: -.035em; }
+.proj-head h3 .cap { color: var(--c); }
+.proj-head p { margin-top: .7rem; max-width: 60ch; color: var(--muted); }
+.tag { display: inline-flex; align-items: center; gap: .5rem; margin-bottom: .8rem; padding: .3rem .7rem; border-radius: 999px; background: var(--chip); font: 700 .74rem var(--f-mono); letter-spacing: .06em; text-transform: uppercase; }
+.tag i { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--green)); }
+.links { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; }
+
+.controls { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 1rem; margin-top: 1.8rem; }
+.seg { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--chip); }
+.seg button { border: 0; background: transparent; color: var(--muted); font: 700 .84rem var(--f-body); padding: .5rem 1rem; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+.stage { margin-top: 1.4rem; display: grid; justify-items: center; perspective: 1500px; }
+.dev { width: 100%; transition: transform .3s ease-out; transform: rotateX(calc(var(--ry, 0) * -2deg)) rotateY(calc(var(--rx, 0) * 3deg)); transform-style: preserve-3d; }
+.laptop { width: min(100%, 980px); margin-inline: auto; filter: drop-shadow(0 28px 40px rgba(0, 0, 0, .35)); }
+.lid { background: #0b0e13; padding: 13px 13px 15px; border-radius: 20px 20px 6px 6px; border: 3px solid #c9ced6; position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), 0 0 0 1px rgba(13, 17, 23, .25); }
+.lid::before { content: ""; position: absolute; top: 5px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: #3a424d; }
+.base { height: 16px; width: 108%; margin-left: -4%; border-radius: 0 0 20px 20px; background: linear-gradient(#e6e9ee, #aab1bb); position: relative; border: 1px solid rgba(13, 17, 23, .25); border-top: 0; }
+.base::after { content: ""; position: absolute; top: 0; left: 50%; width: 16%; height: 6px; margin-left: -8%; border-radius: 0 0 8px 8px; background: #8b929c; }
+.base { height: 16px; width: 108%; margin-left: -4%; border-radius: 0 0 20px 20px; background: linear-gradient(#e6e9ee, #aab1bb); position: relative; border: 1px solid rgba(13, 17, 23, .25); border-top: 0; }
+.base::after { content: ""; position: absolute; top: 0; left: 50%; width: 16%; height: 6px; margin-left: -8%; border-radius: 0 0 8px 8px; background: #8b929c; }
+.screen { position: relative; aspect-ratio: 16 / 10; border-radius: 6px; overflow: hidden; background: #fff; }
+.chrome { position: absolute; inset: 0 0 auto; height: 30px; z-index: 3; display: flex; align-items: center; gap: 6px; padding: 0 12px; background: #eceff3; border-bottom: 1px solid #d5dae1; }
+.chrome i { width: 10px; height: 10px; border-radius: 50%; background: var(--red); }
+.chrome i:nth-child(2) { background: var(--yellow); } .chrome i:nth-child(3) { background: var(--green); }
+.chrome em { margin-left: 10px; flex: 1; max-width: 360px; font: 500 .72rem var(--f-mono); font-style: normal; padding: 3px 10px; border-radius: 999px; background: #fff; color: #5a6572; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.view { position: absolute; inset: 30px 0 0; background: #fff; transition: background .7s; }
+.view img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; opacity: 0; transform: scale(1.015); transition: opacity .7s, transform 1.2s; }
+.view img.on { opacity: 1; transform: scale(1); }
+.view iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+.phone { width: min(100%, 340px); margin-inline: auto; padding: 11px; border-radius: 42px; background: #0b0e13; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, .65), inset 0 0 0 1px rgba(255, 255, 255, .1); position: relative; }
+.phone::before { content: ""; position: absolute; top: 18px; left: 50%; width: 64px; height: 18px; margin-left: -32px; border-radius: 10px; background: #0b0e13; z-index: 4; }
+.phone .screen { aspect-ratio: 520 / 957; border-radius: 31px; }
+.phone .screen { background: #e1e8dc; }
+.phone .view { inset: 26px 0 0; background: transparent; }
+.phone .chrome { display: none; }
+.shots { display: flex; flex-wrap: wrap; justify-content: center; gap: .45rem; margin-top: 1.1rem; }
+.shots button { border: 1px solid var(--line); background: transparent; color: var(--muted); font: 700 .78rem var(--f-mono); padding: .4rem .75rem; border-radius: 999px; cursor: pointer; transition: all .2s; }
+.shots button[aria-current="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.hint { margin-top: .7rem; text-align: center; font: 400 .78rem var(--f-mono); color: var(--muted); }
+
+.tabs { margin-top: 2rem; }
+.tablist { display: flex; flex-wrap: wrap; gap: .4rem; border-bottom: 1px solid var(--line); padding-bottom: .8rem; }
+.tablist button { border: 0; cursor: pointer; background: transparent; color: var(--muted); font: 700 .9rem var(--f-body); padding: .5rem .95rem; border-radius: 999px; transition: all .2s; }
+.tablist button[aria-selected="true"] { background: var(--c, var(--blue)); color: #fff; }
+.tablist button[aria-selected="true"].y { color: var(--on-gold); }
+.panel { padding-top: 1.2rem; animation: rise .45s ease-out; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+.feat { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: .8rem; }
+.feat li { padding: .9rem 1rem .9rem 2.6rem; border-radius: 14px; background: var(--chip); position: relative; }
+.feat li::before { content: ""; position: absolute; left: 1rem; top: 1.2rem; width: 12px; height: 12px; border-radius: 4px; background: var(--c, var(--blue)); }
+.feat li:nth-child(4n+2)::before { background: var(--yellow); } .feat li:nth-child(4n+3)::before { background: var(--green); } .feat li:nth-child(4n+4)::before { background: var(--red); }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { display: inline-block; padding: .45rem .75rem; border-radius: 10px; background: var(--chip); font: 500 .85rem var(--f-mono); transition: transform .2s, background .2s; }
+.chip:hover { transform: translateY(-2px); background: var(--yellow); color: var(--on-yellow); }
+.diagram { overflow-x: auto; border-radius: 16px; background: var(--chip); padding: 1rem; }
+.diagram svg { display: block; min-width: 580px; width: 100%; height: auto; }
+.d-box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+.d-t { font: 700 13px var(--f-mono); fill: var(--ink); } .d-s { font: 400 11px var(--f-mono); fill: var(--muted); }
+.d-l { stroke: var(--muted); stroke-width: 2; fill: none; stroke-dasharray: 6 6; animation: dash 1.2s linear infinite; }
+@keyframes dash { to { stroke-dashoffset: -12; } }
+.d-a { fill: var(--muted); }
+.warn { margin-top: 1rem; font: 400 .8rem var(--f-mono); color: var(--muted); }
+
+/* ---------- Sobre mí (bento) ---------- */
+.bento { margin-top: 2.2rem; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1rem; }
+.cell { padding: clamp(1.2rem, 3vw, 1.8rem); border-radius: 24px; background: var(--card); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid var(--line); }
+.cell.big { grid-column: span 4; } .cell.small { grid-column: span 2; } .cell.half { grid-column: span 3; } .cell.full { grid-column: span 6; }
+.cell h3 { font: 800 1.35rem/1.1 var(--f-display); letter-spacing: -.02em; margin-bottom: .8rem; }
+.cell p + p { margin-top: .8rem; }
+.cell.col { background: var(--c); color: #fff; border-color: transparent; }
+.cell.col.y { color: var(--on-yellow); }
+.cell.col p { opacity: .92; }
+.path { display: grid; gap: 1rem; margin-top: .4rem; }
+.path li { position: relative; padding-left: 1.6rem; }
+.path li::before { content: ""; position: absolute; left: 0; top: .5em; width: 11px; height: 11px; border-radius: 50%; background: var(--c); }
+.path li::after { content: ""; position: absolute; left: 5px; top: 1.4em; bottom: -1.1rem; width: 1px; background: var(--line); }
+.path li:last-child::after { display: none; }
+.path b { display: block; font-weight: 700; } .path span { color: var(--muted); font-size: .92rem; }
+.skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 1.4rem; }
+.skills h4 { font: 700 .75rem var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: .7rem; }
+@media (max-width: 860px) { .cell.big, .cell.small, .cell.half { grid-column: span 6; } }
+
+/* ---------- Contacto ---------- */
+.contact { margin-top: 2rem; position: relative; padding: clamp(1.4rem, 4vw, 2.6rem); border-radius: 28px; background: var(--surface); border: 1px solid transparent; isolation: isolate; }
+.contact::before { content: ""; position: absolute; inset: -2px; z-index: -1; border-radius: 30px;
+  background: conic-gradient(from var(--a, 0deg), var(--red), var(--yellow), var(--green), var(--blue), var(--red)); animation: spin 8s linear infinite; }
+.contact::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 28px; background: var(--surface); }
+@property --a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes spin { to { --a: 360deg; } }
+.contact .grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 2rem; align-items: center; }
+.mail { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-top: 1.2rem; }
+.mail code { font: 500 1rem var(--f-mono); padding: .6rem .9rem; border-radius: 12px; background: var(--chip); user-select: all; overflow-wrap: anywhere; }
+.social { display: grid; gap: .7rem; }
+.social .btn { justify-content: space-between; }
+@media (max-width: 860px) { .contact .grid { grid-template-columns: minmax(0, 1fr); } }
+footer { padding-block: 2rem; font: 400 .82rem var(--f-mono); color: var(--muted); }
+footer .inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .6rem; }
+
+/* ---------- Aparición al hacer scroll (solo donde el navegador lo soporta) ---------- */
+@supports (animation-timeline: view()) {
+  .reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% entry 45%; }
+  @keyframes reveal { from { opacity: .55; transform: translateY(36px) scale(.985); } to { opacity: 1; transform: none; } }
+}
+
+/* ---------- Paleta de comandos ---------- */
+.pal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: start center; padding: 14vh 16px 16px; background: rgba(5, 8, 12, .55); backdrop-filter: blur(4px); }
+.pal[hidden] { display: none; }
+.pal-box { width: min(560px, 100%); border-radius: 18px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); overflow: hidden; animation: rise .25s ease-out; }
+.pal input { width: 100%; padding: 1.1rem 1.2rem; font: 500 1rem var(--f-mono); background: transparent; color: var(--ink); border: 0; border-bottom: 1px solid var(--line); outline: 0; }
+.pal ul { max-height: 50vh; overflow-y: auto; padding: .4rem; }
+.pal li button { width: 100%; display: flex; justify-content: space-between; gap: 1rem; text-align: left; padding: .65rem .8rem; font: 500 .95rem var(--f-body); color: var(--ink); background: transparent; border: 0; border-radius: 10px; cursor: pointer; }
+.pal li button span { font: 400 .75rem var(--f-mono); color: var(--muted); }
+.pal li button[aria-selected="true"] { background: var(--yellow); color: var(--on-yellow); }
+.pal li button[aria-selected="true"] span { color: var(--on-yellow); }
+.pal .empty { padding: 1rem; color: var(--muted); font: 400 .9rem var(--f-mono); }
+.pal .foot { padding: .6rem 1rem; border-top: 1px solid var(--line); font: 400 .72rem var(--f-mono); color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="aura" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="spot" aria-hidden="true"></div>
+<div class="webs" aria-hidden="true"><div class="web w1"><svg viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="M0 0L430.0 0.0M0 0L419.2 95.7M0 0L387.4 186.6M0 0L336.2 268.1M0 0L268.1 336.2M0 0L186.6 387.4M0 0L95.7 419.2M0 0L0.0 430.0M48.0 0.0Q42.9 4.8 47.9 10.9M47.9 10.9Q40.8 14.3 43.8 21.1M43.8 21.1Q36.6 23.0 36.9 29.4M36.9 29.4Q30.5 30.5 29.3 36.7M29.3 36.7Q23.0 36.6 20.9 43.5M20.9 43.5Q14.3 40.8 10.9 48.0M10.9 48.0Q4.8 42.9 0.0 48.4M98.1 0.0Q85.9 9.7 93.0 21.2M93.0 21.2Q81.6 28.5 84.3 40.6M84.3 40.6Q73.2 46.0 74.5 59.4M74.5 59.4Q61.1 61.1 61.1 76.7M61.1 76.7Q46.0 73.2 42.4 88.1M42.4 88.1Q28.5 81.6 21.1 92.5M21.1 92.5Q9.7 85.9 0.0 93.6M144.8 0.0Q132.4 14.9 141.7 32.4M141.7 32.4Q125.7 44.0 135.0 65.0M135.0 65.0Q112.8 70.9 118.5 94.5M118.5 94.5Q94.2 94.2 92.3 115.8M92.3 115.8Q70.9 112.8 62.7 130.2M62.7 130.2Q44.0 125.7 32.5 142.4M32.5 142.4Q14.9 132.4 0.0 150.5M204.1 0.0Q182.4 20.6 203.7 46.5M203.7 46.5Q173.3 60.6 186.1 89.6M186.1 89.6Q155.5 97.7 156.7 125.0M156.7 125.0Q129.8 129.8 124.4 156.0M124.4 156.0Q97.7 155.5 89.0 184.9M89.0 184.9Q60.6 173.3 46.5 203.9M46.5 203.9Q20.6 182.4 0.0 205.5M269.6 0.0Q236.1 26.6 255.6 58.3M255.6 58.3Q224.3 78.5 231.9 111.7M231.9 111.7Q201.2 126.4 205.0 163.5M205.0 163.5Q168.0 168.0 168.1 210.8M168.1 210.8Q126.4 201.2 116.6 242.2M116.6 242.2Q78.5 224.3 58.1 254.3M58.1 254.3Q26.6 236.1 0.0 257.6M320.8 0.0Q293.3 33.1 314.2 71.7M314.2 71.7Q278.6 97.5 299.3 144.1M299.3 144.1Q250.0 157.1 262.6 209.4M262.6 209.4Q208.7 208.7 204.5 256.5M204.5 256.5Q157.1 250.0 138.9 288.4M138.9 288.4Q97.5 278.6 72.0 315.6M72.0 315.6Q33.1 293.3 0.0 333.6M396.3 0.0Q354.2 39.9 395.5 90.3M395.5 90.3Q336.4 117.7 361.1 173.9M361.1 173.9Q301.8 189.6 304.1 242.5M304.1 242.5Q252.0 252.0 241.5 302.9M241.5 302.9Q189.6 301.8 172.9 359.0M172.9 359.0Q117.7 336.4 90.3 395.7M90.3 395.7Q39.9 354.2 0.0 398.8"/></g><circle class="dew" cx="144.3" cy="32.9" r="2.2" fill="currentColor" style="animation-delay:0.0s"/><circle class="dew" cx="115.7" cy="92.3" r="2.2" fill="currentColor" style="animation-delay:0.7s"/><circle class="dew" cx="64.2" cy="133.3" r="2.2" fill="currentColor" style="animation-delay:1.4s"/><circle class="dew" cx="257.4" cy="58.7" r="2.2" fill="currentColor" style="animation-delay:2.1s"/><circle class="dew" cx="206.4" cy="164.6" r="2.2" fill="currentColor" style="animation-delay:2.8s"/><circle class="dew" cx="114.5" cy="237.9" r="2.2" fill="currentColor" style="animation-delay:3.5s"/><circle class="dew" cx="319.8" cy="73.0" r="2.2" fill="currentColor" style="animation-delay:4.2s"/><circle class="dew" cx="256.4" cy="204.5" r="2.2" fill="currentColor" style="animation-delay:4.9s"/><circle class="dew" cx="142.3" cy="295.5" r="2.2" fill="currentColor" style="animation-delay:0.6s"/></svg></div><div class="web w2"><svg viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="M0 0L430.0 0.0M0 0L419.2 95.7M0 0L387.4 186.6M0 0L336.2 268.1M0 0L268.1 336.2M0 0L186.6 387.4M0 0L95.7 419.2M0 0L0.0 430.0M48.0 0.0Q42.9 4.8 47.9 10.9M47.9 10.9Q40.8 14.3 43.8 21.1M43.8 21.1Q36.6 23.0 36.9 29.4M36.9 29.4Q30.5 30.5 29.3 36.7M29.3 36.7Q23.0 36.6 20.9 43.5M20.9 43.5Q14.3 40.8 10.9 48.0M10.9 48.0Q4.8 42.9 0.0 48.4M98.1 0.0Q85.9 9.7 93.0 21.2M93.0 21.2Q81.6 28.5 84.3 40.6M84.3 40.6Q73.2 46.0 74.5 59.4M74.5 59.4Q61.1 61.1 61.1 76.7M61.1 76.7Q46.0 73.2 42.4 88.1M42.4 88.1Q28.5 81.6 21.1 92.5M21.1 92.5Q9.7 85.9 0.0 93.6M144.8 0.0Q132.4 14.9 141.7 32.4M141.7 32.4Q125.7 44.0 135.0 65.0M135.0 65.0Q112.8 70.9 118.5 94.5M118.5 94.5Q94.2 94.2 92.3 115.8M92.3 115.8Q70.9 112.8 62.7 130.2M62.7 130.2Q44.0 125.7 32.5 142.4M32.5 142.4Q14.9 132.4 0.0 150.5M204.1 0.0Q182.4 20.6 203.7 46.5M203.7 46.5Q173.3 60.6 186.1 89.6M186.1 89.6Q155.5 97.7 156.7 125.0M156.7 125.0Q129.8 129.8 124.4 156.0M124.4 156.0Q97.7 155.5 89.0 184.9M89.0 184.9Q60.6 173.3 46.5 203.9M46.5 203.9Q20.6 182.4 0.0 205.5M269.6 0.0Q236.1 26.6 255.6 58.3M255.6 58.3Q224.3 78.5 231.9 111.7M231.9 111.7Q201.2 126.4 205.0 163.5M205.0 163.5Q168.0 168.0 168.1 210.8M168.1 210.8Q126.4 201.2 116.6 242.2M116.6 242.2Q78.5 224.3 58.1 254.3M58.1 254.3Q26.6 236.1 0.0 257.6M320.8 0.0Q293.3 33.1 314.2 71.7M314.2 71.7Q278.6 97.5 299.3 144.1M299.3 144.1Q250.0 157.1 262.6 209.4M262.6 209.4Q208.7 208.7 204.5 256.5M204.5 256.5Q157.1 250.0 138.9 288.4M138.9 288.4Q97.5 278.6 72.0 315.6M72.0 315.6Q33.1 293.3 0.0 333.6M396.3 0.0Q354.2 39.9 395.5 90.3M395.5 90.3Q336.4 117.7 361.1 173.9M361.1 173.9Q301.8 189.6 304.1 242.5M304.1 242.5Q252.0 252.0 241.5 302.9M241.5 302.9Q189.6 301.8 172.9 359.0M172.9 359.0Q117.7 336.4 90.3 395.7M90.3 395.7Q39.9 354.2 0.0 398.8"/></g><circle class="dew" cx="144.3" cy="32.9" r="2.2" fill="currentColor" style="animation-delay:0.0s"/><circle class="dew" cx="115.7" cy="92.3" r="2.2" fill="currentColor" style="animation-delay:0.7s"/><circle class="dew" cx="64.2" cy="133.3" r="2.2" fill="currentColor" style="animation-delay:1.4s"/><circle class="dew" cx="257.4" cy="58.7" r="2.2" fill="currentColor" style="animation-delay:2.1s"/><circle class="dew" cx="206.4" cy="164.6" r="2.2" fill="currentColor" style="animation-delay:2.8s"/><circle class="dew" cx="114.5" cy="237.9" r="2.2" fill="currentColor" style="animation-delay:3.5s"/><circle class="dew" cx="319.8" cy="73.0" r="2.2" fill="currentColor" style="animation-delay:4.2s"/><circle class="dew" cx="256.4" cy="204.5" r="2.2" fill="currentColor" style="animation-delay:4.9s"/><circle class="dew" cx="142.3" cy="295.5" r="2.2" fill="currentColor" style="animation-delay:0.6s"/></svg></div><div class="motes" id="motes"></div></div>
+
+<header class="top">
+  <div class="inner">
+    <div class="bar">
+      <a class="mark" href="#top"><img data-img="logo" alt="" width="40" height="40"><span>Sergio Pérez</span></a>
+      <nav class="nav" aria-label="Secciones">
+        <a href="#proyectos" data-i18n="nav_projects">Proyectos</a>
+        <a href="#sobre-mi" data-i18n="nav_about">Sobre mí</a>
+        <a href="#stack" data-i18n="nav_stack">Stack</a>
+        <a href="#contacto" data-i18n="nav_contact">Contacto</a>
+      </nav>
+      <div class="tools">
+        <a class="tool" id="cv" href="Sergio_Perez_Perez_dev_esp.pdf" download data-i18n="cv_s">CV ↓</a>
+        <button class="tool" id="open-pal" type="button" aria-label="Abrir buscador de comandos"><span data-i18n="cmd">Ir a…</span> <kbd>Ctrl K</kbd></button>
+        <button class="tool" id="lang" type="button" aria-label="Cambiar idioma">EN</button>
+        <button class="tool" id="theme" type="button" aria-label="Cambiar tema claro u oscuro">◐</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" id="hero">
+    <div class="dangle" aria-hidden="true"><span class="thread"></span><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><ellipse cx="20" cy="24" rx="6.5" ry="8" fill="currentColor"/><circle cx="20" cy="14" r="4" fill="currentColor"/><path d="M14 20 6 13 3 16M14 24 4 24 2 29M14 27 6 34 8 38M26 20 34 13 37 16M26 24 36 24 38 29M26 27 34 34 32 38"/></svg></div>
+    <div class="inner">
+      <div>
+        <span class="pill"><i></i><span data-i18n="pill">Madrid · Disponible para incorporarme ya</span></span>
+        <h1>
+          <span data-i18n="h1a">Construyo</span>
+          <span class="rot" aria-hidden="true"><span>
+            <b data-i18n="w1">apps completas</b><b data-i18n="w2">APIs REST</b><b data-i18n="w3">interfaces</b><b data-i18n="w4">despliegues</b><b data-i18n="w1">apps completas</b>
+          </span></span>
+          <span data-i18n="h1b">de principio a fin.</span>
+          <span class="sr" data-i18n="h1sr">Construyo apps completas, APIs REST, interfaces y despliegues de principio a fin.</span>
+        </h1>
+        <p class="role" data-i18n="role">Sergio Pérez Pérez · Desarrollador Full-Stack Junior</p>
+        <p class="lead" data-i18n-html="lead">Convierto ideas en <b>aplicaciones web</b> con React, Node.js y MongoDB: las diseño, las programo y las dejo desplegadas para que las pruebes.</p>
+        <ul class="proof">
+          <li style="--c:var(--green)" data-i18n="pf1">3 apps en producción</li>
+          <li style="--c:var(--purple)" data-i18n="pf2">API REST + JWT</li>
+          <li style="--c:var(--gold)" data-i18n="pf3">Tests automáticos</li>
+          <li style="--c:var(--blue)" data-i18n="pf4">Demo en vivo</li>
+        </ul>
+      </div>
+      <div class="fan" id="fan">
+        <a class="card c1" href="#huella" aria-label="Ver Huella"><img data-img="h-dash" alt=""><span>Huella</span></a>
+        <a class="card c2" href="#tastefy" aria-label="Ver Tastefy"><img data-img="tw-home" alt=""><span>Tastefy</span></a>
+        <a class="card c3" href="#webew" aria-label="Ver Webew"><img data-img="ww-home" alt=""><span>Webew</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="marq" aria-hidden="true"><div id="marq"></div></div>
+
+  <section class="block" id="proyectos">
+    <div class="inner">
+      <p class="eyebrow" style="--c:var(--purple)" data-i18n="nav_projects">Proyectos</p>
+      <h2 class="h2" data-i18n="projects_h">Aplicaciones en producción</h2>
+      <p class="sub" data-i18n="projects_sub">Cada una con su API, su base de datos y su despliegue. Puedes verlas en capturas o probarlas en vivo.</p>
+      <div id="projects"></div>
+    </div>
+  </section>
+
+  <section class="block" id="sobre-mi">
+    <div class="inner">
+      <p class="eyebrow reveal" style="--c:var(--gold)" data-i18n="nav_about">Sobre mí</p>
+      <h2 class="h2 reveal" data-i18n="about_h">Del aula al código</h2>
+      <div class="bento">
+        <div class="cell big reveal">
+          <h3 data-i18n="about_t1">Antes de programar, enseñaba</h3>
+          <p data-i18n="about_p1">Pasé por el aula apoyando a alumnos de ESO. Explicar un problema de tres maneras hasta que se entiende sirve igual con una API que con un adolescente.</p>
+          <p data-i18n="about_p2">En 2026 hice el bootcamp full-stack de Neoland y desde entonces construyo aplicaciones completas: las despliego, las rompo y las arreglo.</p>
+        </div>
+        <div class="cell small reveal">
+          <h3 data-i18n="path_h">Recorrido</h3>
+          <ul class="path">
+            <li style="--c:var(--purple)"><b data-i18n="path0">Profesor de refuerzo</b><span data-i18n="path0s">Educación Primaria</span></li>
+            <li style="--c:var(--gold)"><b data-i18n="path1">Profesor de apoyo educativo</b><span>ESO · Comunidad de Madrid</span></li>
+            <li style="--c:var(--red)"><b data-i18n="path2">Bootcamp Full-Stack</b><span>Neoland · ene – jul 2026</span></li>
+            <li style="--c:var(--green)"><b data-i18n="path3">Proyectos propios</b><span>Huella · Tastefy · Webew</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="stack">
+    <div class="inner">
+      <p class="eyebrow reveal" style="--c:var(--blue)">Stack</p>
+      <h2 class="h2 reveal" data-i18n="stack_h">Con lo que trabajo</h2>
+      <div class="cell skills reveal" style="margin-top:2rem">
+        <div><h4>Front</h4><div class="chips"><span class="chip">JavaScript</span><span class="chip">React</span><span class="chip">Vite</span><span class="chip">React Router</span><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">Tailwind</span></div></div>
+        <div><h4>Back</h4><div class="chips"><span class="chip">Node.js</span><span class="chip">Express</span><span class="chip">API REST</span><span class="chip">JWT</span></div></div>
+        <div><h4 data-i18n="data_h">Datos y archivos</h4><div class="chips"><span class="chip">MongoDB</span><span class="chip">Mongoose</span><span class="chip">Atlas</span><span class="chip">Cloudinary</span></div></div>
+        <div><h4 data-i18n="tools_h">Calidad y despliegue</h4><div class="chips"><span class="chip">Mocha + Chai</span><span class="chip">Vitest</span><span class="chip">Supertest</span><span class="chip">Git + GitHub</span><span class="chip">Vercel</span><span class="chip">Render</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="contacto">
+    <div class="inner">
+      <p class="eyebrow reveal" style="--c:var(--green)" data-i18n="nav_contact">Contacto</p>
+      <h2 class="h2 reveal" data-i18n="contact_h">¿Hablamos?</h2>
+      <div class="contact reveal">
+        <div class="grid">
+          <div>
+            <p data-i18n="contact_p">Busco mi primer puesto como desarrollador full-stack junior en Madrid: presencial, híbrido o en remoto.</p>
+            <div class="mail">
+              <code id="mail">perez.sergio.dev@gmail.com</code>
+              <button class="btn btn-sm" id="copy" type="button" data-i18n="copy">Copiar</button>
+            </div>
+          </div>
+          <div class="social">
+            <a class="btn" href="https://www.linkedin.com/in/sergio-perez-dev" target="_blank" rel="noopener"><span>LinkedIn</span><span>↗</span></a>
+            <a class="btn" href="https://github.com/SergioPerez3" target="_blank" rel="noopener"><span>GitHub</span><span>↗</span></a>
+            <a class="btn btn-yellow" id="cv2" href="Sergio_Perez_Perez_dev_esp.pdf" download><span data-i18n="cv">Descargar CV</span><span>↓</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="inner">
+    <span>© 2026 Sergio Pérez Pérez</span>
+    <span data-i18n="foot">Hecho a mano con HTML, CSS y JavaScript</span>
+  </div>
+</footer>
+
+<div class="pal" id="pal" hidden>
+  <div class="pal-box" role="dialog" aria-modal="true" aria-label="Buscador de comandos">
+    <input id="pal-q" type="text" autocomplete="off" spellcheck="false" placeholder="Escribe: huella, contacto, tema…" aria-label="Buscar comando">
+    <ul id="pal-list" role="listbox"></ul>
+    <div class="foot" data-i18n="pal_hint">↑ ↓ para moverte · Enter para ir · Esc para cerrar</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var IMG = {"h-dash": "img/h-dash.webp", "h-cal": "img/h-cal.webp", "h-pet": "img/h-pet.webp", "h-emer": "img/h-emer.webp", "h-serv": "img/h-serv.webp", "h-gast": "img/h-gast.webp", "h-land": "img/h-land.webp", "h-reg": "img/h-reg.webp", "h-docs": "img/h-docs.webp", "h-salud": "img/h-salud.webp", "h-tar": "img/h-tar.webp", "hm-ini": "img/hm-ini.webp", "hm-pet": "img/hm-pet.webp", "hm-cal": "img/hm-cal.webp", "hm-tar": "img/hm-tar.webp", "hm-gas": "img/hm-gas.webp", "tw-home": "img/tw-home.webp", "tw-desp": "img/tw-desp.webp", "tw-likes": "img/tw-likes.webp", "tw-form": "img/tw-form.webp", "tw-login": "img/tw-login.webp", "tm-home": "img/tm-home.webp", "tm-busc": "img/tm-busc.webp", "tm-form": "img/tm-form.webp", "tm-login": "img/tm-login.webp", "ww-home": "img/ww-home.webp", "ww-cat": "img/ww-cat.webp", "ww-dash": "img/ww-dash.webp", "ww-prod": "img/ww-prod.webp", "ww-form": "img/ww-form.webp", "ww-fav": "img/ww-fav.webp", "ww-reg": "img/ww-reg.webp", "wm-home": "img/wm-home.webp", "wm-cat": "img/wm-cat.webp", "wm-dash": "img/wm-dash.webp", "logo": "img/logo.webp"}, BGS = {"h-dash": ["linear-gradient(rgb(202,208,196),rgb(134,204,201))", "linear-gradient(90deg,rgb(15,78,59),rgb(244,238,227))"], "h-cal": ["linear-gradient(rgb(208,212,200),rgb(217,228,223))", "linear-gradient(90deg,rgb(15,78,60),rgb(245,239,227))"], "h-pet": ["linear-gradient(rgb(204,211,199),rgb(207,218,210))", "linear-gradient(90deg,rgb(15,78,59),rgb(245,239,228))"], "h-emer": ["linear-gradient(rgb(196,207,196),rgb(193,214,207))", "linear-gradient(90deg,rgb(15,78,59),rgb(245,242,233))"], "h-serv": ["linear-gradient(rgb(206,211,199),rgb(193,207,200))", "linear-gradient(90deg,rgb(15,78,59),rgb(245,239,227))"], "h-gast": ["linear-gradient(rgb(205,210,198),rgb(217,229,226))", "linear-gradient(90deg,rgb(15,78,59),rgb(245,239,227))"], "h-land": ["linear-gradient(rgb(247,242,232),rgb(213,218,212))", "linear-gradient(90deg,rgb(248,243,233),rgb(248,243,233))"], "h-reg": ["linear-gradient(rgb(239,237,226),rgb(241,239,233))", "linear-gradient(90deg,rgb(236,238,227),rgb(246,238,226))"], "h-docs": ["linear-gradient(rgb(213,217,205),rgb(213,222,213))", "linear-gradient(90deg,rgb(15,78,59),rgb(246,238,226))"], "h-salud": ["linear-gradient(rgb(211,215,203),rgb(211,220,212))", "linear-gradient(90deg,rgb(15,78,59),rgb(246,238,226))"], "h-tar": ["linear-gradient(rgb(213,217,205),rgb(213,224,221))", "linear-gradient(90deg,rgb(15,78,59),rgb(246,238,226))"], "hm-ini": ["linear-gradient(rgb(224,229,215),rgb(255,255,255))", "linear-gradient(90deg,rgb(223,229,215),rgb(229,227,212))"], "hm-pet": ["linear-gradient(rgb(223,216,209),rgb(255,255,255))", "linear-gradient(90deg,rgb(243,241,233),rgb(225,221,212))"], "hm-cal": ["linear-gradient(rgb(224,229,214),rgb(255,255,255))", "linear-gradient(90deg,rgb(234,236,225),rgb(235,230,217))"], "hm-tar": ["linear-gradient(rgb(225,229,215),rgb(255,255,255))", "linear-gradient(90deg,rgb(227,232,218),rgb(232,230,214))"], "hm-gas": ["linear-gradient(rgb(238,235,224),rgb(255,255,255))", "linear-gradient(90deg,rgb(246,243,234),rgb(230,227,219))"], "tw-home": ["linear-gradient(rgb(12,10,47),rgb(48,35,61))", "linear-gradient(90deg,rgb(11,15,61),rgb(22,12,64))"], "tw-desp": ["linear-gradient(rgb(12,10,49),rgb(125,111,110))", "linear-gradient(90deg,rgb(9,11,51),rgb(17,9,56))"], "tw-likes": ["linear-gradient(rgb(12,9,47),rgb(9,7,32))", "linear-gradient(90deg,rgb(10,13,55),rgb(24,14,71))"], "tw-form": ["linear-gradient(rgb(13,11,49),rgb(23,24,59))", "linear-gradient(90deg,rgb(9,12,52),rgb(18,9,56))"], "tw-login": ["linear-gradient(rgb(13,11,49),rgb(7,8,41))", "linear-gradient(90deg,rgb(9,11,53),rgb(18,9,56))"], "tm-home": ["linear-gradient(rgb(13,12,54),rgb(86,70,81))", "linear-gradient(90deg,rgb(26,24,92),rgb(38,17,90))"], "tm-busc": ["linear-gradient(rgb(12,10,49),rgb(102,47,27))", "linear-gradient(90deg,rgb(24,22,86),rgb(35,16,85))"], "tm-form": ["linear-gradient(rgb(12,10,49),rgb(26,24,66))", "linear-gradient(90deg,rgb(23,21,80),rgb(31,16,79))"], "tm-login": ["linear-gradient(rgb(12,10,49),rgb(9,7,33))", "linear-gradient(90deg,rgb(22,20,78),rgb(31,16,78))"], "ww-home": ["linear-gradient(rgb(30,39,33),rgb(32,25,11))", "linear-gradient(90deg,rgb(18,16,9),rgb(23,25,18))"], "ww-cat": ["linear-gradient(rgb(5,3,1),rgb(29,41,38))", "linear-gradient(90deg,rgb(70,69,65),rgb(16,14,8))"], "ww-dash": ["linear-gradient(rgb(3,4,1),rgb(107,100,87))", "linear-gradient(90deg,rgb(16,13,7),rgb(15,13,7))"], "ww-prod": ["linear-gradient(rgb(5,3,1),rgb(34,28,12))", "linear-gradient(90deg,rgb(17,14,8),rgb(16,13,7))"], "ww-form": ["linear-gradient(rgb(21,22,16),rgb(40,36,25))", "linear-gradient(90deg,rgb(18,15,8),rgb(24,24,17))"], "ww-fav": ["linear-gradient(rgb(5,3,1),rgb(19,12,3))", "linear-gradient(90deg,rgb(9,7,3),rgb(13,11,5))"], "ww-reg": ["linear-gradient(rgb(5,3,1),rgb(21,21,16))", "linear-gradient(90deg,rgb(17,15,8),rgb(15,13,6))"], "wm-home": ["linear-gradient(rgb(5,3,1),rgb(15,12,4))", "linear-gradient(90deg,rgb(28,24,10),rgb(30,24,11))"], "wm-cat": ["linear-gradient(rgb(5,3,1),rgb(32,25,12))", "linear-gradient(90deg,rgb(63,58,51),rgb(26,22,13))"], "wm-dash": ["linear-gradient(rgb(5,3,1),rgb(59,41,36))", "linear-gradient(90deg,rgb(28,25,15),rgb(27,23,14))"], "logo": ["linear-gradient(rgb(4,4,4),rgb(6,5,5))", "linear-gradient(90deg,rgb(11,10,8),rgb(12,11,8))"]};
+  document.querySelectorAll("[data-img]").forEach(function (im) { im.src = IMG[im.getAttribute("data-img")]; });
+  var LIVE = { huella: "https://huella-alpha.vercel.app", tastefy: "https://tastefy-peach.vercel.app", webew: "https://frontend-proyecto-final-sergio.onrender.com" };
+
+  var T = {
+    es: {
+      cv_s: "CV ↓",
+      nav_projects: "Proyectos", nav_about: "Sobre mí", nav_stack: "Stack", nav_contact: "Contacto", cmd: "Ir a…",
+      pill: "Madrid · Disponible para incorporarme ya", h1a: "Construyo", h1b: "de principio a fin.",
+      w1: "apps completas", w2: "APIs REST", w3: "interfaces", w4: "despliegues",
+      h1sr: "Construyo apps completas, APIs REST, interfaces y despliegues de principio a fin.",
+      role: "Sergio Pérez Pérez · Desarrollador Full-Stack Junior",
+      lead: "Convierto ideas en <b>aplicaciones web</b> con React, Node.js y MongoDB: las diseño, las programo y las dejo desplegadas para que las pruebes.",
+      pf1: "3 apps en producción", pf2: "API REST + JWT", pf3: "Tests automáticos", pf4: "Demo en vivo", cta_demo: "Probar Huella en vivo ↗",
+      cta_projects: "Ver proyectos", cv: "Descargar CV", cta_contact: "Contactar",
+      projects_h: "Aplicaciones en producción",
+      projects_sub: "Cada una con su API, su base de datos y su despliegue. Puedes verlas en capturas o probarlas en vivo.",
+      about_h: "Del aula al código", about_t1: "Antes de programar, enseñaba",
+      about_p1: "Mi primer oficio fue el aula: profesor de refuerzo y apoyo con alumnos de Primaria y de ESO. Ahí aprendí a escuchar, a tener paciencia y a no dar nada por entendido. Y, sobre todo, a resolver los problemas con calma y paso a paso: dividirlos, probar, equivocarme y volver a intentarlo. Es justo lo que hago ahora cuando depuro código.",
+      about_p2: "En 2026 hice el bootcamp full-stack de Neoland y desde entonces construyo aplicaciones completas: las despliego, las rompo y las arreglo.",
+      path_h: "Recorrido", path0: "Profesor de refuerzo", path0s: "Educación Primaria", path1: "Profesor de apoyo educativo", path2: "Bootcamp Full-Stack", path3: "Proyectos propios",
+      skill1_t: "Explico claro", skill1_p: "Código legible, README con capturas y mensajes de error que se entienden.",
+      skill2_t: "Termino lo que empiezo", skill2_p: "Desde la idea hasta el despliegue: tests, documentación y una demo que funciona.",
+      stack_h: "Con lo que trabajo", data_h: "Datos y archivos", tools_h: "Calidad y despliegue",
+      contact_h: "¿Hablamos?", contact_p: "Busco mi primer puesto como desarrollador full-stack junior en Madrid: presencial, híbrido o en remoto.",
+      copy: "Copiar", copied: "Copiado", foot: "Hecho a mano con HTML, CSS y JavaScript",
+      pal_hint: "↑ ↓ para moverte · Enter para ir · Esc para cerrar", pal_ph: "Escribe: huella, contacto, tema…", pal_none: "Sin resultados",
+      c_projects: "Proyectos", c_huella: "Huella", c_tastefy: "Tastefy", c_webew: "Webew", c_about: "Sobre mí", c_stack: "Stack", c_contact: "Contacto",
+      c_lang: "Cambiar a inglés", c_theme: "Cambiar tema claro / oscuro", c_gh: "Abrir GitHub", c_demo: "Abrir la demo de Huella", c_cv: "Descargar CV",
+      g_go: "Ir a", g_do: "Acción", g_link: "Enlace",
+      laptop: "Portátil", phone: "Móvil", shots: "Capturas", live: "En vivo", go_demo: "Ir a la demo ↗", code: "Código ↗",
+      live_hint: "Es la app real. Si el servidor estaba dormido, tarda unos segundos en responder.",
+      live_fail: "Si no carga aquí, usa «Ir a la demo».", prod: "En producción", featured: "Proyecto destacado",
+      t_feat: "Funciones", t_arch: "Arquitectura", t_stack: "Stack", slow: "Servidor gratuito: la primera carga puede tardar unos segundos."
+    },
+    en: {
+      cv_s: "CV ↓",
+      nav_projects: "Projects", nav_about: "About", nav_stack: "Stack", nav_contact: "Contact", cmd: "Go to…",
+      pill: "Madrid · Available to start now", h1a: "I build", h1b: "from start to finish.",
+      w1: "complete apps", w2: "REST APIs", w3: "interfaces", w4: "deployments",
+      h1sr: "I build complete apps, REST APIs, interfaces and deployments from start to finish.",
+      role: "Sergio Pérez Pérez · Junior Full-Stack Developer",
+      lead: "I turn ideas into <b>web applications</b> with React, Node.js and MongoDB: I design them, build them and deploy them for you to try.",
+      pf1: "3 apps in production", pf2: "REST API + JWT", pf3: "Automated tests", pf4: "Live demo", cta_demo: "Try Huella live ↗",
+      cta_projects: "See projects", cv: "Download CV", cta_contact: "Get in touch",
+      projects_h: "Applications in production",
+      projects_sub: "Each with its own API, database and deployment. Browse screenshots or try them live.",
+      about_h: "From classroom to code", about_t1: "Before coding, I taught",
+      about_p1: "My first job was the classroom: learning-support teacher with primary and secondary school students. There I learned to listen, to be patient and to take nothing for granted. And above all, to solve problems calmly and step by step: break them down, try, get it wrong and try again. It is exactly what I do now when I debug code.",
+      about_p2: "In 2026 I completed the Neoland full-stack bootcamp and since then I build complete applications: I deploy them, break them and fix them.",
+      path_h: "Path", path0: "Primary school tutor", path0s: "Primary education", path1: "Learning support teacher", path2: "Full-Stack Bootcamp", path3: "Personal projects",
+      skill1_t: "I explain clearly", skill1_p: "Readable code, READMEs with screenshots and error messages that make sense.",
+      skill2_t: "I finish what I start", skill2_p: "From idea to deployment: tests, documentation and a demo that works.",
+      stack_h: "What I work with", data_h: "Data and files", tools_h: "Quality and deployment",
+      contact_h: "Shall we talk?", contact_p: "I am looking for my first junior full-stack role in Madrid: on-site, hybrid or remote.",
+      copy: "Copy", copied: "Copied", foot: "Handmade with HTML, CSS and JavaScript",
+      pal_hint: "↑ ↓ to move · Enter to go · Esc to close", pal_ph: "Type: huella, contact, theme…", pal_none: "No results",
+      c_projects: "Projects", c_huella: "Huella", c_tastefy: "Tastefy", c_webew: "Webew", c_about: "About", c_stack: "Stack", c_contact: "Contact",
+      c_lang: "Switch to Spanish", c_theme: "Toggle light / dark theme", c_gh: "Open GitHub", c_demo: "Open the Huella demo", c_cv: "Download CV",
+      g_go: "Go to", g_do: "Action", g_link: "Link",
+      laptop: "Laptop", phone: "Phone", shots: "Screenshots", live: "Live", go_demo: "Go to demo ↗", code: "Code ↗",
+      live_hint: "This is the real app. If the server was asleep, it takes a few seconds to answer.",
+      live_fail: "If it does not load here, use “Go to demo”.", prod: "In production", featured: "Featured project",
+      t_feat: "Features", t_arch: "Architecture", t_stack: "Stack", slow: "Free-tier server: the first load can take a few seconds."
+    }
+  };
+
+  var P = [
+    {
+      id: "huella", name: "Huella", color: "var(--green)", featured: true, url: "huella-alpha.vercel.app", repo: "https://github.com/SergioPerez3/Huella",
+      shots: [["h-land", { es: "Landing", en: "Landing" }], ["h-dash", { es: "Inicio", en: "Home" }], ["h-pet", { es: "Mascota", en: "Pet" }], ["h-serv", { es: "Servicios", en: "Services" }], ["h-emer", { es: "Emergencia", en: "Emergency" }], ["h-cal", { es: "Calendario", en: "Calendar" }], ["h-salud", { es: "Salud", en: "Health" }], ["h-docs", { es: "Documentos", en: "Documents" }], ["h-tar", { es: "Tareas", en: "Tasks" }], ["h-gast", { es: "Gastos", en: "Expenses" }], ["h-reg", { es: "Registro", en: "Sign-up" }]],
+      mobile: [["hm-ini", { es: "Inicio", en: "Home" }], ["hm-pet", { es: "Mascota", en: "Pet" }], ["hm-cal", { es: "Calendario", en: "Calendar" }], ["hm-tar", { es: "Tareas", en: "Tasks" }], ["hm-gas", { es: "Gastos", en: "Expenses" }]],
+      sub: { es: "Gestión de mascotas: ficha, salud, calendario, gastos, tarjeta de emergencia con QR, cartel de «Se busca» y servicios cercanos.", en: "Pet management: profile, health, calendar, expenses, emergency QR card, a «Lost pet» poster and nearby services." },
+      feat: { es: ["Ficha de mascota con foto, salud y peso", "Calendario de tareas con colores e iconos por tipo", "Gastos por categoría con gráficos", "Tarjeta de emergencia con QR para el collar", "Cartel de «Se busca» imprimible con vista previa en vivo", "Servicios cercanos con datos de OpenStreetMap", "Cuenta demo de un clic, con datos propios para cada visitante"],
+              en: ["Pet profile with photo, health and weight", "Task calendar with colours and icons per type", "Expenses by category with charts", "Emergency card with a QR for the collar", "Printable «Lost pet» poster with live preview", "Nearby services using OpenStreetMap data", "One-click demo account with its own data for every visitor"] },
+      stack: ["React", "Vite", "React Router", "FullCalendar", "Recharts", "Node.js", "Express", "MongoDB", "Mongoose", "JWT", "Cloudinary", "Mocha + Chai", "Supertest", "OpenStreetMap"],
+      arch: { client: ["React + Vite", "Vercel"], api: ["API Express", "Render · JWT"], right: ["MongoDB Atlas", "Cloudinary", "OpenStreetMap"] }
+    },
+    {
+      id: "tastefy", name: "Tastefy", color: "var(--purple)", url: "tastefy-peach.vercel.app", repo: "https://github.com/SergioPerez3/tastefy",
+      shots: [["tw-home", { es: "Inicio", en: "Home" }], ["tw-desp", { es: "Despensa", en: "Pantry" }], ["tw-likes", { es: "Me gusta", en: "Likes" }], ["tw-form", { es: "Nueva receta", en: "New recipe" }], ["tw-login", { es: "Inicio de sesión", en: "Login" }]],
+      mobile: [["tm-home", { es: "Inicio", en: "Home" }], ["tm-busc", { es: "Buscador", en: "Search" }], ["tm-form", { es: "Nueva receta", en: "New recipe" }], ["tm-login", { es: "Inicio de sesión", en: "Login" }]],
+      bg: "#0b0b26",
+      sub: { es: "Red social de recetas con autenticación JWT, filtros, «me gusta», subida de fotos y un tema oscuro propio.", en: "Recipe social network with JWT authentication, filters, likes, photo uploads and a custom dark theme." },
+      feat: { es: ["Registro e inicio de sesión con JWT", "Crear, editar y borrar recetas con foto", "Filtros y búsqueda de recetas", "«Me gusta» en las recetas", "Diseño propio en tema oscuro"], en: ["Sign-up and login with JWT", "Create, edit and delete recipes with a photo", "Recipe filters and search", "Likes on recipes", "Custom dark-theme design"] },
+      stack: ["React", "Vite", "Node.js", "Express", "MongoDB", "Cloudinary", "Mocha"],
+      arch: { client: ["React + Vite", "Vercel"], api: ["API Express", "Render · JWT"], right: ["MongoDB Atlas", "Cloudinary"] }
+    },
+    {
+      id: "webew", name: "Webew", color: "var(--gold)", bg: "#000", url: "frontend-proyecto-final-sergio.onrender.com", repo: "https://github.com/SergioPerez3/Webew-frontend", slow: true,
+      shots: [["ww-home", { es: "Inicio", en: "Home" }], ["ww-cat", { es: "Catálogo", en: "Catalogue" }], ["ww-dash", { es: "Dashboard", en: "Dashboard" }], ["ww-prod", { es: "Producto", en: "Product" }], ["ww-form", { es: "Formulario", en: "Form" }], ["ww-fav", { es: "Favoritos", en: "Favourites" }], ["ww-reg", { es: "Registro", en: "Sign-up" }]],
+      mobile: [["wm-home", { es: "Inicio", en: "Home" }], ["wm-cat", { es: "Catálogo", en: "Catalogue" }], ["wm-dash", { es: "Dashboard", en: "Dashboard" }]],
+      sub: { es: "Marketplace donde explorar, buscar y gestionar productos: catálogo, búsqueda en tiempo real, favoritos y panel de administración.", en: "Marketplace to browse, search and manage products: catalogue, live search, favourites and an admin panel." },
+      feat: { es: ["Catálogo con filtros y ordenación", "Búsqueda en tiempo real", "Favoritos por usuario", "Panel de administración con CRUD de productos", "Registro e inicio de sesión con JWT"], en: ["Catalogue with filters and sorting", "Live search", "Favourites per user", "Admin panel with product CRUD", "Sign-up and login with JWT"] },
+      stack: ["React", "Vite", "React Router", "Context API", "Tailwind", "Node.js", "Express", "MongoDB", "Vitest"],
+      arch: { client: ["React + Vite", "Render"], api: ["API Express", "Render · JWT"], right: ["MongoDB"] }
+    }
+  ];
+
+  var root = document.documentElement, lang = "es";
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  var state = {}; // por proyecto: modo, vista, captura, pestaña
+  P.forEach(function (p) { state[p.id] = { dev: "laptop", live: false, shot: 0, tab: "feat" }; });
+  var timers = {};
+
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+  /* Ajusta cada captura al ancho de la pantalla: estira un poco (máx. 15 % en vertical, 20 % en horizontal) y rellena el resto con el color de sus bordes, sin recortar nada. */
+  function paintBg(view) {
+    var im = view.querySelector("img.on"); if (!im) return;
+    var b = BGS[im.getAttribute("data-k")]; if (b) view.style.background = b[im.getAttribute("data-m") === "h" ? 1 : 0];
+  }
+  function fitView(view) {
+    var W = view.clientWidth, H = view.clientHeight; if (!W || !H) return;
+    var vr = W / H;
+    Array.prototype.forEach.call(view.querySelectorAll("img"), function (im) {
+      if (!im.naturalWidth) return;
+      var r = im.naturalWidth / im.naturalHeight, w, h;
+      if (r >= vr) { w = W; h = Math.min(H, W / r * 1.15); } else { h = H; w = Math.min(W, H * r * 1.2); }
+      im.style.objectFit = "fill"; im.style.right = "auto"; im.style.bottom = "auto";
+      im.style.width = w + "px"; im.style.height = h + "px"; im.style.left = ((W - w) / 2) + "px"; im.style.top = ((H - h) / 2) + "px";
+      im.setAttribute("data-m", r >= vr ? "v" : "h");
+    });
+    paintBg(view);
+  }
+
+  function archSvg(p) {
+    var A = p.arch, n = A.right.length, bh = 50, gap = 17, tot = n * bh + (n - 1) * gap, y0 = (200 - tot) / 2;
+    function box(x, y, w, h, r, t1, t2) {
+      return '<rect class="d-box" x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + r + '"/>' +
+        '<text class="d-t" x="' + (x + w / 2) + '" y="' + (t2 ? y + h / 2 - 6 : y + h / 2 + 5) + '" text-anchor="middle">' + t1 + '</text>' +
+        (t2 ? '<text class="d-s" x="' + (x + w / 2) + '" y="' + (y + h / 2 + 14) + '" text-anchor="middle">' + t2 + '</text>' : "");
+    }
+    var s = '<svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arquitectura de ' + p.name + '">' +
+      box(8, 62, 150, 76, 14, A.client[0], A.client[1]) + box(245, 62, 150, 76, 14, A.api[0], A.api[1]) +
+      '<path class="d-l" d="M158 100 H237"/><path class="d-a" d="M245 100 l-10 -5 v10 z"/>';
+    A.right.forEach(function (r, i) {
+      var y = y0 + i * (bh + gap), cy = y + bh / 2;
+      s += box(482, y, 150, bh, 12, r, "");
+      s += (Math.abs(cy - 100) < 1 ? '<path class="d-l" d="M395 100 H474"/>' : '<path class="d-l" d="M395 ' + (100 + (cy < 100 ? -16 : 16)) + ' H430 V' + cy + ' H474"/>') +
+        '<path class="d-a" d="M482 ' + cy + ' l-10 -5 v10 z"/>';
+    });
+    s += "</svg>";
+    var d = el("div", "diagram"); d.innerHTML = s; return d;
+  }
+
+  function renderProject(p) {
+    var st = state[p.id], t = T[lang];
+    var art = el("article", "proj reveal"); art.id = p.id; art.style.setProperty("--c", p.color);
+
+    var head = el("div", "proj-head"), hl = el("div");
+    var tag = el("span", "tag"); tag.appendChild(el("i")); tag.appendChild(document.createTextNode(p.featured ? t.featured + " · " + t.prod : t.prod));
+    var h3 = el("h3"); h3.appendChild(el("span", "cap", p.name.charAt(0))); h3.appendChild(document.createTextNode(p.name.slice(1)));
+    hl.appendChild(tag); hl.appendChild(h3); hl.appendChild(el("p", null, p.sub[lang]));
+    var links = el("div", "links");
+    var a1 = el("a", "btn btn-yellow", t.go_demo); a1.href = "https://" + p.url; a1.target = "_blank"; a1.rel = "noopener";
+    var a2 = el("a", "btn", t.code); a2.href = p.repo; a2.target = "_blank"; a2.rel = "noopener";
+    links.appendChild(a1); links.appendChild(a2);
+    head.appendChild(hl); head.appendChild(links); art.appendChild(head);
+
+    // controles
+    var ctr = el("div", "controls");
+    if (p.mobile) {
+      var seg1 = el("div", "seg");
+      [["laptop", t.laptop], ["phone", t.phone]].forEach(function (o) {
+        var b = el("button", null, o[1]); b.type = "button"; b.setAttribute("aria-pressed", st.dev === o[0]);
+        b.addEventListener("click", function () { st.dev = o[0]; st.shot = 0; rerenderOne(p.id); }); seg1.appendChild(b);
+      });
+      ctr.appendChild(seg1);
+    }
+    var seg2 = el("div", "seg");
+    [[false, t.shots], [true, t.live]].forEach(function (o) {
+      var b = el("button", null, o[1]); b.type = "button"; b.setAttribute("aria-pressed", st.live === o[0]);
+      b.addEventListener("click", function () { st.live = o[0]; rerenderOne(p.id); }); seg2.appendChild(b);
+    });
+    ctr.appendChild(seg2); art.appendChild(ctr);
+
+    // dispositivo
+    var stage = el("div", "stage"), dev = el("div", "dev " + (st.dev === "phone" ? "phone-w" : ""));
+    var frame = el("div", st.dev === "phone" ? "phone" : "laptop"), lid = el("div", st.dev === "phone" ? null : "lid");
+    var screen = el("div", "screen"); if (p.bg && st.dev === "phone") screen.style.background = p.bg;
+    if (st.dev !== "phone") {
+      var chrome = el("div", "chrome"); chrome.appendChild(el("i")); chrome.appendChild(el("i")); chrome.appendChild(el("i")); chrome.appendChild(el("em", null, p.url)); screen.appendChild(chrome);
+    }
+    var view = el("div", "view");
+    view.style.background = "#000";
+    if (st.live) {
+      var f = document.createElement("iframe"); f.src = st.dev === "phone" ? LIVE[p.id] : LIVE[p.id]; f.title = p.name; f.loading = "lazy"; view.appendChild(f);
+    } else {
+      var list = st.dev === "phone" ? p.mobile : p.shots;
+      list.forEach(function (s, i) {
+        var im = document.createElement("img"); im.src = IMG[s[0]]; im.alt = p.name + " · " + s[1][lang]; im.className = i === st.shot ? "on" : ""; im.setAttribute("data-k", s[0]);
+        im.addEventListener("load", function () { fitView(view); }); view.appendChild(im);
+      });
+      if (window.ResizeObserver) new ResizeObserver(function () { fitView(view); }).observe(view);
+    }
+    screen.appendChild(view);
+    if (st.dev === "phone") { lid.appendChild(screen); frame.appendChild(screen); }
+    else { lid.appendChild(screen); frame.appendChild(lid); frame.appendChild(el("div", "base")); }
+    dev.appendChild(frame); stage.appendChild(dev); art.appendChild(stage);
+
+    if (!st.live) {
+      var shots = el("div", "shots");
+      (st.dev === "phone" ? p.mobile : p.shots).forEach(function (s, i) {
+        var b = el("button", null, s[1][lang]); b.type = "button"; b.setAttribute("aria-current", i === st.shot);
+        b.addEventListener("click", function () { st.shot = i; stopAuto(p.id); setShot(art, p, i); }); shots.appendChild(b);
+      });
+      art.appendChild(shots);
+    }
+    art.appendChild(el("p", "hint", st.live ? t.live_hint + " " + t.live_fail : (p.slow ? t.slow : "")));
+
+    // pestañas
+    var tabs = el("div", "tabs"), tl = el("div", "tablist"); tl.setAttribute("role", "tablist");
+    var defs = [["feat", t.t_feat]];
+    if (p.arch) defs.push(["arch", t.t_arch]);
+    defs.push(["stack", t.t_stack]);
+    if (!defs.some(function (d) { return d[0] === st.tab; })) st.tab = "feat";
+    defs.forEach(function (d) {
+      var b = el("button", p.color === "var(--gold)" ? "y" : "", d[1]); b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-selected", st.tab === d[0]);
+      b.addEventListener("click", function () { st.tab = d[0]; rerenderOne(p.id); }); tl.appendChild(b);
+    });
+    tabs.appendChild(tl);
+    var panel = el("div", "panel"); panel.setAttribute("role", "tabpanel");
+    if (st.tab === "feat") {
+      var ul = el("ul", "feat"); p.feat[lang].forEach(function (x) { ul.appendChild(el("li", null, x)); }); panel.appendChild(ul);
+    } else if (st.tab === "arch") { panel.appendChild(archSvg(p)); }
+    else { var cs = el("div", "chips"); p.stack.forEach(function (x) { cs.appendChild(el("span", "chip", x)); }); panel.appendChild(cs); }
+    tabs.appendChild(panel); art.appendChild(tabs);
+
+    // inclinación 3D suave según el ratón
+    stage.addEventListener("pointermove", function (e) {
+      var r = stage.getBoundingClientRect();
+      dev.style.setProperty("--rx", ((e.clientX - r.left) / r.width - .5) * 2);
+      dev.style.setProperty("--ry", ((e.clientY - r.top) / r.height - .5) * 2);
+    });
+    stage.addEventListener("pointerleave", function () { dev.style.setProperty("--rx", 0); dev.style.setProperty("--ry", 0); });
+    return art;
+  }
+
+  function setShot(art, p, i) {
+    var imgs = art.querySelectorAll(".view img"), bs = art.querySelectorAll(".shots button");
+    Array.prototype.forEach.call(imgs, function (im, k) { im.classList.toggle("on", k === i); });
+    var vw = art.querySelector(".view"), lst = state[p.id].dev === "phone" ? p.mobile : p.shots;
+    if (vw) paintBg(vw);
+    Array.prototype.forEach.call(bs, function (b, k) { b.setAttribute("aria-current", k === i); });
+    state[p.id].shot = i;
+  }
+  function stopAuto(id) { if (timers[id]) { clearInterval(timers[id]); timers[id] = null; } }
+  function startAuto(art, p) {
+    stopAuto(p.id);
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var st = state[p.id]; if (st.live) return;
+    timers[p.id] = setInterval(function () {
+      var r = art.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > window.innerHeight) return;
+      setShot(art, p, (state[p.id].shot + 1) % (state[p.id].dev === "phone" ? p.mobile : p.shots).length);
+    }, 3600);
+  }
+
+  var host = document.getElementById("projects");
+  function rerenderOne(id) {
+    var p = P.filter(function (x) { return x.id === id; })[0], old = document.getElementById(id), a = renderProject(p);
+    a.classList.remove("reveal"); host.replaceChild(a, old); startAuto(a, p);
+  }
+  function rerender() {
+    host.innerHTML = "";
+    P.forEach(function (p) { var a = renderProject(p); host.appendChild(a); startAuto(a, p); });
+  }
+
+  /* ---------- Idioma / tema ---------- */
+  var pal = document.getElementById("pal"), q = document.getElementById("pal-q"), list = document.getElementById("pal-list");
+  function applyLang(l) {
+    lang = l; root.lang = l; store("sp-lang", l);
+    document.querySelectorAll("[data-i18n]").forEach(function (e) { var v = T[l][e.getAttribute("data-i18n")]; if (v) e.textContent = v; });
+    document.querySelectorAll("[data-i18n-html]").forEach(function (e) { var v = T[l][e.getAttribute("data-i18n-html")]; if (v) e.innerHTML = v; });
+    document.getElementById("lang").textContent = l === "es" ? "EN" : "ES";
+    q.placeholder = T[l].pal_ph;
+    var cvf = l === "es" ? "Sergio_Perez_Perez_dev_esp.pdf" : "Sergio_Perez_Perez_dev_eng.pdf";
+    document.getElementById("cv").setAttribute("href", cvf); document.getElementById("cv2").setAttribute("href", cvf);
+    rerender();
+    if (!pal.hidden) renderList();
+  }
+  function currentDark() { var t = root.getAttribute("data-theme"); if (t) return t === "dark"; return !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches); }
+  function toggleTheme() { var n = currentDark() ? "light" : "dark"; root.setAttribute("data-theme", n); store("sp-theme", n); }
+  var st0 = load("sp-theme"); if (st0 === "light" || st0 === "dark") root.setAttribute("data-theme", st0);
+  document.getElementById("theme").addEventListener("click", toggleTheme);
+  document.getElementById("lang").addEventListener("click", function () { applyLang(lang === "es" ? "en" : "es"); });
+
+  /* ---------- Motas doradas ---------- */
+  (function () {
+    var m = document.getElementById("motes"); if (!m) return;
+    for (var i = 0; i < 16; i++) {
+      var d = document.createElement("i");
+      d.style.left = ((i * 37) % 100) + "%"; d.style.animationDuration = (16 + (i * 7) % 14) + "s"; d.style.animationDelay = "-" + ((i * 5) % 20) + "s";
+      d.style.setProperty("--dx", ((i % 2 ? 1 : -1) * (20 + (i * 11) % 60)) + "px"); d.style.width = d.style.height = (2 + (i % 3)) + "px"; m.appendChild(d);
+    }
+  })();
+
+  /* ---------- Cinta de tecnologías ---------- */
+  var techs = ["JavaScript", "React", "Node.js", "Express", "MongoDB", "API REST", "JWT", "Vite", "Cloudinary", "Vercel", "Render", "Git"];
+  var cols = ["var(--gold)", "var(--purple)", "var(--blue)", "var(--green)"], mq = document.getElementById("marq");
+  for (var rep = 0; rep < 2; rep++) techs.concat(techs).forEach(function (x, i) { var s = el("span", null, x); s.style.setProperty("--c", cols[i % 4]); mq.appendChild(s); });
+
+  /* ---------- Foco y abanico del hero ---------- */
+  var fan = document.getElementById("fan"), hero = document.getElementById("hero");
+  hero.addEventListener("pointermove", function (e) {
+    var r = hero.getBoundingClientRect();
+    fan.style.setProperty("--px", ((e.clientX - r.left) / r.width - .5) * 2);
+    fan.style.setProperty("--py", ((e.clientY - r.top) / r.height - .5) * 2);
+  });
+  document.addEventListener("pointermove", function (e) {
+    root.style.setProperty("--mx", e.clientX + "px"); root.style.setProperty("--my", e.clientY + "px");
+  });
+
+  /* ---------- Copiar correo ---------- */
+  document.getElementById("copy").addEventListener("click", function () {
+    var btn = this, mail = document.getElementById("mail");
+    function ok() { btn.textContent = T[lang].copied; setTimeout(function () { btn.textContent = T[lang].copy; }, 1600); }
+    function fb() { var r = document.createRange(); r.selectNodeContents(mail); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(mail.textContent).then(ok, fb); else fb();
+  });
+
+  /* ---------- Paleta de comandos ---------- */
+  function go(id) { var e = document.getElementById(id); if (e) e.scrollIntoView({ behavior: "smooth", block: "start" }); }
+  function cmds() {
+    var t = T[lang];
+    return [
+      { l: t.c_projects, g: t.g_go, run: function () { go("proyectos"); } },
+      { l: t.c_huella, g: t.g_go, run: function () { go("huella"); } },
+      { l: t.c_tastefy, g: t.g_go, run: function () { go("tastefy"); } },
+      { l: t.c_webew, g: t.g_go, run: function () { go("webew"); } },
+      { l: t.c_about, g: t.g_go, run: function () { go("sobre-mi"); } },
+      { l: t.c_stack, g: t.g_go, run: function () { go("stack"); } },
+      { l: t.c_contact, g: t.g_go, run: function () { go("contacto"); } },
+      { l: t.c_demo, g: t.g_link, run: function () { window.open(LIVE.huella, "_blank", "noopener"); } },
+      { l: t.c_gh, g: t.g_link, run: function () { window.open("https://github.com/SergioPerez3", "_blank", "noopener"); } },
+      { l: t.c_cv, g: t.g_link, run: function () { document.getElementById("cv").click(); } },
+      { l: t.c_lang, g: t.g_do, run: function () { applyLang(lang === "es" ? "en" : "es"); } },
+      { l: t.c_theme, g: t.g_do, run: toggleTheme }
+    ];
+  }
+  var shown = [], sel = 0, lastFocus = null;
+  function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+  function renderList() {
+    var term = norm(q.value.trim());
+    shown = cmds().filter(function (c) { return !term || norm(c.l).indexOf(term) !== -1; });
+    if (sel >= shown.length) sel = 0;
+    list.innerHTML = "";
+    if (!shown.length) { var e = el("li", "empty", T[lang].pal_none); list.appendChild(e); return; }
+    shown.forEach(function (c, i) {
+      var li = el("li"), b = el("button", null, c.l), s = el("span", null, c.g);
+      b.type = "button"; b.setAttribute("role", "option"); b.setAttribute("aria-selected", i === sel); b.appendChild(s);
+      b.addEventListener("click", function () { run(i); });
+      b.addEventListener("mousemove", function () { if (sel !== i) { sel = i; mark(); } });
+      li.appendChild(b); list.appendChild(li);
+    });
+  }
+  function mark() { Array.prototype.forEach.call(list.querySelectorAll("button"), function (b, i) { b.setAttribute("aria-selected", i === sel); if (i === sel) b.scrollIntoView({ block: "nearest" }); }); }
+  function openPal() { lastFocus = document.activeElement; pal.hidden = false; q.value = ""; sel = 0; renderList(); q.focus(); }
+  function closePal() { pal.hidden = true; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
+  function run(i) { var c = shown[i]; if (!c) return; closePal(); setTimeout(c.run, 30); }
+  document.getElementById("open-pal").addEventListener("click", openPal);
+  pal.addEventListener("click", function (e) { if (e.target === pal) closePal(); });
+  q.addEventListener("input", function () { sel = 0; renderList(); });
+  q.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowDown") { e.preventDefault(); sel = Math.min(sel + 1, shown.length - 1); mark(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); sel = Math.max(sel - 1, 0); mark(); }
+    else if (e.key === "Enter") { e.preventDefault(); run(sel); }
+  });
+  document.addEventListener("keydown", function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); if (pal.hidden) openPal(); else closePal(); }
+    else if (e.key === "Escape" && !pal.hidden) closePal();
+  });
+
+  applyLang(load("sp-lang") === "en" ? "en" : "es");
+})();
+</script>
+
+</body>
+</html>
